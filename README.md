@@ -1,2 +1,78 @@
-# Sing-box-Argo-Mini
-既然来了，就留下你的Star吧！本项目是一个专为 **100M 限制低内存容器**（如 Pella VPS 等）打造的轻量级 VMess-WS + Cloudflare Argo 隧道代理节点托管服务。
+# 🚀 Sing-box Cloudflare Argo 极简低内存节点服务 (100M 容器开源专版)
+
+本项目是一个专为 **100M 限制低内存容器**（如 Pella、Koyeb、Serv00、廉价 VPS 等）打造的轻量级 VMess-WS + Cloudflare Argo 隧道代理节点托管服务。
+
+采用 **“Go 语言原生机器码 + 超轻量 Python Gunicorn 引导”** 架构，将容器运行总内存降至 **25MB ~ 40MB**，即使在节点大流量并发传输时也绝对不会产生 OOM（内存爆满崩溃重启）。
+
+---
+
+## ✨ 项目核心特点
+
+1. **极致内存优化 (25MB ~ 40MB)**
+   - 核心代理与进程控制使用 Go 语言原生实现，去除了 Python 虚拟机与庞大框架的 ~25MB 硬性基准内存开销。
+   - 彻底移除了 WARP (WireGuard) 路由和远程 Geosite 规则下载，仅保留极简 `vmess-ws-in` 与 `direct` 出站。
+
+2. **双模式隧道自动切换 (固定隧道 vs 临时隧道)**
+   - **固定隧道**：填写 `ARGO_DOMAIN` 与 `ARGO_AUTH` 环境变量，自动建立 Cloudflare 自定义固定隧道。
+   - **临时隧道**：将 `ARGO_DOMAIN` 和 `ARGO_AUTH` **留空**，程序自动发起 Cloudflare Quick Tunnel 并在日志中捕获生成免费的 `trycloudflare.com` 临时节点！
+
+3. **100% 兼容 Gunicorn / WSGI 托管平台**
+   - 附带 30 行超轻量 `main.py` 入口，完美通过 Gunicorn/Pella 平台的 `importlib` 健康检查，并在后台自动静默拉起 Go 二进制 `./main`。
+
+4. **日志隐私与自动清理**
+   - 节点输出为加密 Base64 订阅密文（以 `dm1lc3M6...` 开头），不暴露出明文链接。
+   - 启动 2 分钟后自动清理运行目录中的二进制文件与配置文件，仅保留 `sub.txt` 供订阅路由读取，极大释放磁盘与内存。
+
+---
+
+## 🛠️ 环境变量配置说明
+
+所有环境变量均可在 [main.py](main.py) 顶部的 `os.environ.setdefault(...)` 中直接编辑默认值，也可直接在容器控制面板中设置环境变量（容器传入的变量优先生效）。
+
+| 环境变量 | 默认值 | 说明 |
+| :--- | :--- | :--- |
+| **`ARGO_DOMAIN`** | `""` | 固定隧道域名（**留空则自动开启临时隧道**） |
+| **`ARGO_AUTH`** | `""` | 固定隧道 Token 或 JSON 密钥（**留空则自动开启临时隧道**） |
+| **`UUID`** | `5520fab5-56d4-48cb-8156-e58b1cc18442` | VMess 用户 UUID |
+| **`SUB_PATH`** | `sub` | 订阅接口 Token 路径，访问 `http://<your-host>/sub` 获取节点 |
+| **`PORT`** | `3000` | Web 订阅与健康检查端口 |
+| **`CFIP`** | `saas.sin.fan` | 优选 IP 或优选域名 |
+| **`CFPORT`** | `443` | 优选端口 |
+| **`NAME`** | `""` | 节点显示名称 |
+| **`CHAT_ID`** | `""` | Telegram Chat ID（可选，推送到 TG） |
+| **`BOT_TOKEN`** | `""` | Telegram Bot Token（可选） |
+| **`UPLOAD_URL`** | `""` | 节点或订阅自动上传地址（可选） |
+| **`PROJECT_URL`** | `""` | 项目 URL（自动保活可选） |
+| **`AUTO_ACCESS`** | `false` | 是否开启自动 URL 保活任务 |
+| **`DISABLE_ARGO`** | `false` | 设置为 `true` 时禁用 Argo 隧道 |
+
+---
+
+## 🚀 快速部署步骤
+
+### 方案 A：上传项目文件部署（推荐）
+1. 将打包好的 **`main.py`**、**`main`**（可执行二进制）和 **`requirements.txt`** 上传至容器。
+2. 保持平台默认的启动命令不变（`python main.py` 或 Gunicorn `main:app`）。
+3. 容器启动后，访问 `http://<域名或IP>:<端口>/<SUB_PATH>` 即可获取生成的 VMess 节点 Base64 订阅！
+
+---
+
+## 🔧 自行源码编译指南 (开发者)
+
+如果您修改了 `main.go` 源码，需要在本地跨平台编译为 Linux 64 位 ELF 二进制文件：
+
+### 在 Windows (PowerShell) 下编译：
+```powershell
+$env:GOOS="linux"; $env:GOARCH="amd64"; go build -ldflags="-s -w" -o main main.go
+```
+
+### 在 Linux / macOS 下编译：
+```bash
+GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o main main.go
+```
+
+---
+
+## 📄 开源协议
+本项目采用 [MIT License](LICENSE) 协议开源。
+
