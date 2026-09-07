@@ -68,8 +68,8 @@
 
 ### 方案 A：上传项目文件部署（推荐）
 1. 将打包好的 **`main.py`**、**`main`**（可执行二进制）和 **`requirements.txt`** 上传至容器。
-2. 保持平台默认的启动命令不变（`python main.py` 或 Gunicorn `main:app`）。
-3. 容器启动后，访问 `http://<域名或IP>:<端口>/<SUB_PATH>` 即可获取生成的 VMess 节点 Base64 订阅！
+2. 保持平台默认的启动命令不变（`main.py`）。
+3. 容器启动后，日志输出节点信息，同时文件夹目录.cache下保存sub.txt
 
 ---
 
