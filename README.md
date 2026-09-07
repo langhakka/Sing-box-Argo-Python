@@ -17,7 +17,7 @@
 2. **双模式隧道自动切换 (固定隧道 vs 临时隧道)**
    - **固定隧道**：填写 `ARGO_DOMAIN` 与 `ARGO_AUTH` 环境变量，自动建立 Cloudflare 自定义固定隧道。
    - **临时隧道**：将 `ARGO_DOMAIN` 和 `ARGO_AUTH` **留空**，程序自动发起 Cloudflare Quick Tunnel 并在日志中捕获生成免费的 `trycloudflare.com` 临时节点！
-   - **提示：建议使用固定隧道，临时隧道在容器重启后会需重新申请隧道，隧道域名会有变化，需重新导入节点**
+   - **提示：建议使用固定隧道，临时隧道在容器重启后需重新申请隧道，隧道域名会有变化，需重新导入节点**
 
 3. **100% 兼容 Gunicorn / WSGI 托管平台**
    - 附带 30 行超轻量 `main.py` 入口，完美通过 Gunicorn/Pella 平台的 `importlib` 健康检查，并在后台自动静默拉起 Go 二进制 `./main`。
@@ -44,14 +44,14 @@
 
 ## 🛠️ 环境变量配置说明
 
-所有环境变量均可在 [main.py](main.py) 顶部的 `os.environ.setdefault(...)` 中直接编辑默认值，也可直接在容器控制面板中设置环境变量（容器传入的变量优先生效）。
+所有环境变量在 [main.py](main.py) 顶部的 `os.environ.setdefault(...)` 中直接编辑默认值。
 
 | 环境变量 | 默认值 | 说明 |
 | :--- | :--- | :--- |
 | **`ARGO_DOMAIN`** | `""` | 固定隧道域名 |
 | **`ARGO_AUTH`** | `""` | 固定隧道 Token 或 JSON 密钥 |
 | **`UUID`** | `5520fab5-56d4-48cb-8156-e58b1cc18442` | VMess 用户 UUID |
-| **`SUB_PATH`** | `sub` | 订阅接口 Token 路径，访问 `http://<your-host>/sub` 获取节点 |
+| **`SUB_PATH`** | `sub` | 订阅接口 Token 路径 |
 | **`PORT`** | `3000` | Web 订阅与健康检查端口 |
 | **`CFIP`** | `saas.sin.fan` | 优选 IP 或优选域名 |
 | **`CFPORT`** | `443` | 优选端口 |
@@ -70,7 +70,7 @@
 ### 方案 A：上传项目文件部署（推荐）
 1. 将打包好的 **`main.py`**、**`main`**（可执行二进制）和 **`requirements.txt`** 上传至容器，上传时间较长，请耐心等待
 2. 保持平台默认的启动命令不变（`main.py`）。
-3. 容器启动后，日志输出节点信息，同时文件夹目录.cache下保存sub.txt
+3. 容器启动后，日志输出节点信息，同时在文件夹目录.cache下保存sub.txt
 
 ---
 
