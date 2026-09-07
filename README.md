@@ -17,6 +17,7 @@
 2. **双模式隧道自动切换 (固定隧道 vs 临时隧道)**
    - **固定隧道**：填写 `ARGO_DOMAIN` 与 `ARGO_AUTH` 环境变量，自动建立 Cloudflare 自定义固定隧道。
    - **临时隧道**：将 `ARGO_DOMAIN` 和 `ARGO_AUTH` **留空**，程序自动发起 Cloudflare Quick Tunnel 并在日志中捕获生成免费的 `trycloudflare.com` 临时节点！
+   - 提示：建议使用固定隧道，临时隧道在容器重启后会需重新申请隧道，隧道域名会有变化，需重新导入节点
 
 3. **100% 兼容 Gunicorn / WSGI 托管平台**
    - 附带 30 行超轻量 `main.py` 入口，完美通过 Gunicorn/Pella 平台的 `importlib` 健康检查，并在后台自动静默拉起 Go 二进制 `./main`。
@@ -47,8 +48,8 @@
 
 | 环境变量 | 默认值 | 说明 |
 | :--- | :--- | :--- |
-| **`ARGO_DOMAIN`** | `""` | 固定隧道域名（**留空则自动开启临时隧道**） |
-| **`ARGO_AUTH`** | `""` | 固定隧道 Token 或 JSON 密钥（**留空则自动开启临时隧道**） |
+| **`ARGO_DOMAIN`** | `""` | 固定隧道域名 |
+| **`ARGO_AUTH`** | `""` | 固定隧道 Token 或 JSON 密钥 |
 | **`UUID`** | `5520fab5-56d4-48cb-8156-e58b1cc18442` | VMess 用户 UUID |
 | **`SUB_PATH`** | `sub` | 订阅接口 Token 路径，访问 `http://<your-host>/sub` 获取节点 |
 | **`PORT`** | `3000` | Web 订阅与健康检查端口 |
