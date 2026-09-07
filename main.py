@@ -3,8 +3,7 @@ import subprocess
 import threading
 from flask import Flask, Response
 
-# 环境变量默认配置（公开开源版本：ARGO_DOMAIN 和 ARGO_AUTH 默认为空）
-# 填入 ARGO_DOMAIN 和 ARGO_AUTH 使用固定隧道；留空则自动启用临时隧道（trycloudflare.com）
+# 环境变量默认配置；填入 ARGO_DOMAIN 和 ARGO_AUTH 使用固定隧道；留空则自动启用临时隧道（trycloudflare.com）
 os.environ.setdefault('UPLOAD_URL', '')
 os.environ.setdefault('PROJECT_URL', '')
 os.environ.setdefault('AUTO_ACCESS', 'false')
