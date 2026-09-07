@@ -17,7 +17,7 @@
 2. **双模式隧道自动切换 (固定隧道 vs 临时隧道)**
    - **固定隧道**：填写 `ARGO_DOMAIN` 与 `ARGO_AUTH` 环境变量，自动建立 Cloudflare 自定义固定隧道。
    - **临时隧道**：将 `ARGO_DOMAIN` 和 `ARGO_AUTH` **留空**，程序自动发起 Cloudflare Quick Tunnel 并在日志中捕获生成免费的 `trycloudflare.com` 临时节点！
-   - 提示：建议使用固定隧道，临时隧道在容器重启后会需重新申请隧道，隧道域名会有变化，需重新导入节点
+   **提示：建议使用固定隧道，临时隧道在容器重启后会需重新申请隧道，隧道域名会有变化，需重新导入节点**
 
 3. **100% 兼容 Gunicorn / WSGI 托管平台**
    - 附带 30 行超轻量 `main.py` 入口，完美通过 Gunicorn/Pella 平台的 `importlib` 健康检查，并在后台自动静默拉起 Go 二进制 `./main`。
