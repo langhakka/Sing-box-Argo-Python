@@ -1,4 +1,4 @@
-# 🚀 Sing-box Argo Mini 极简低内存节点服务 (100M 容器开源专版)
+# 🚀 Sing-box Argo Python 极简低内存节点服务 (100M 容器开源专版)
 
 ## ⭐ Star 一下支持项目 ⭐
 
